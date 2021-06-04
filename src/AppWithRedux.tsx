@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import './App.css';
 import {TodoList} from "./TodoList";
 import {AddItemForm} from "./AddItemForm";
@@ -14,25 +14,27 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
 
-function AppWithRedux() {
+const AppWithRedux = () => {
+    console.log('App called');
+
     const dispatch = useDispatch();
     const todoLists = useSelector<AppRootStateType, TodoListType[]>(state => state.todoLists);
 
-    function removeTodoList(todoListId: string) {
+    const removeTodoList = useCallback((todoListId: string) => {
         dispatch(removeTodoListAC(todoListId));
-    }
+    },[dispatch]);
 
-    function addTodoList(title: string) {
+    const addTodoList = useCallback((title: string) => {
         dispatch(addTodoListAC(title));
-    }
+    }, [dispatch]);
 
-    function changeTodoListTitle(todoListId: string, title: string) {
+    const changeTodoListTitle = useCallback((todoListId: string, title: string) => {
         dispatch(changeTodoListTitleAC(todoListId, title));
-    }
+    },[dispatch]);
 
-    function changeFilter(todoListId: string, value: FilterValuesType) {
+    const changeFilter = useCallback ((todoListId: string, value: FilterValuesType) => {
         dispatch(changeTodoListFilterAC(todoListId, value));
-    }
+    },[dispatch]);
 
     return (
         <div className="App">
@@ -54,10 +56,9 @@ function AppWithRedux() {
                 <Grid container spacing={3}>
                     {
                         todoLists.map(tl => {
-                                return <Grid item>
+                                return <Grid item key={tl.todoListId}>
                                     <Paper style={{padding: "10px"}} elevation={3}>
-                                        <TodoList key={tl.id}
-                                                  id={tl.id}
+                                        <TodoList todoListId={tl.todoListId}
                                                   title={tl.title}
                                                   changeFilter={changeFilter}
                                                   filter={tl.filter}

@@ -6,7 +6,9 @@ type EditableTitlePropsType = {
     onChange: (title: string) => void
 }
 
-export function EditableTitle(props: EditableTitlePropsType) {
+export const EditableTitle = React.memo((props: EditableTitlePropsType) => {
+    console.log('EditableSpan called')
+
     let [editMode, setEditMode] = useState(false);
     let [title, setTitle] = useState('');
     const [error, setError] = useState("");
@@ -44,4 +46,4 @@ export function EditableTitle(props: EditableTitlePropsType) {
                          autoFocus/>
             : <span onDoubleClick={activateEditMode}>{props.title}</span>
     )
-}
+});
